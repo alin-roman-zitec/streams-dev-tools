@@ -124,6 +124,17 @@ VectorWatchStreamNode.prototype.requestConfig = function(resolve, reject, authTo
 /**
  * @param resolve {Function}
  * @param reject {Function}
+ * @param methodName {String}
+ * @param args {Object[]}
+ * @param authTokens {Object}
+ */
+VectorWatchStreamNode.prototype.callMethod = function(resolve, reject, methodName, args, authTokens) {
+    reject && reject(new Error('Not implemented.'));
+};
+
+/**
+ * @param resolve {Function}
+ * @param reject {Function}
  * @param settingName {String}
  * @param searchTerm {String}
  * @param state {Object}
@@ -279,6 +290,14 @@ privateMethods = {
                 var settingName = req.body.settingName;
                 var searchTerm = req.body.value || '';
                 privateMethods.optionsHandler.call(_this, settingName, searchTerm, state, res);
+            } else if (eventType == "CALL") {
+                req.assert('method', 'Method is required.').notEmpty();
+                var method = req.body.method;
+                var args = req.body.args || [];
+                if (!Array.isArray(args)) {
+                    args = [args];
+                }
+                privateMethods.callHandler.call(_this, method, args, state.__auth, res);
             } else {
                 return next("No known event");
             }
@@ -394,6 +413,31 @@ privateMethods = {
             }, function(err) {
                 promise.reject(err);
             }, tokens);
+        });
+    },
+
+    callHandler: function(methodName, args, auth, response) {
+        var promise = new Promise(), _this = this;
+        promise.then(function(result) {
+            log('log', "Call method sucessful, the response containing " + result + " is being sent", true);
+
+            response.status(200).json({
+                v: 1,
+                p: result
+            });
+        }, function(reason, statusCode) {
+            log('log', "Call method unsuccessful, the response containing the error message is being sent", true);
+            response.status(statusCode || 400).json(reason);
+        });
+
+        privateMethods.getAccessToken.call(this, auth, function(err, tokens) {
+            if (err) return promise.reject(err);
+
+            _this.callMethod(function(result) {
+                promise.resolve(result);
+            }, function(err) {
+                promise.reject(err);
+            }, methodName, args, tokens);
         });
     },
 
