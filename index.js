@@ -293,10 +293,9 @@ privateMethods = {
             } else if (eventType == "CALL") {
                 req.assert('method', 'Method is required.').notEmpty();
                 var method = req.body.method;
-                var args = req.body.args || [];
-                if (!Array.isArray(args)) {
-                    args = [args];
-                }
+                var methodType = req.body.methodType || 'GET';
+                var elementType = req.body.elementType || 'checkboxElement';
+                var args = req.body.args || {};
                 privateMethods.callHandler.call(_this, method, args, state.__auth, res);
             } else {
                 return next("No known event");
@@ -531,6 +530,12 @@ privateMethods = {
 };
 
 
+var VectorWatchAppNode = function VectorWatchAppNode() {
+    VectorWatchStreamNode.apply(this, arguments);
+};
+VectorWatchAppNode.prototype = Object.create(VectorWatchStreamNode.prototype);
+VectorWatchAppNode.prototype.constructor = VectorWatchAppNode;
+
 module.exports = {
     /**
      * @param options {Object}
@@ -550,6 +555,26 @@ module.exports = {
         }
         if (options.requestOptions) {
             node.requestOptions = options.requestOptions;
+        }
+
+        return node;
+    },
+
+    /**
+     * @param options {Object}
+     * @returns {VectorWatchStreamNode}
+     */
+    createAppNode: function(options) {
+        var node = new VectorWatchAppNode(options);
+
+        if (options.requestConfig) {
+            node.requestConfig = options.requestConfig;
+        }
+        if (options.requestOptions) {
+            node.requestOptions = options.requestOptions;
+        }
+        if (options.callMethod) {
+            node.callMethod = options.callMethod;
         }
 
         return node;
