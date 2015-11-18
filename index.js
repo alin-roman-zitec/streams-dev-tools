@@ -290,11 +290,11 @@ privateMethods = {
                 var settingName = req.body.settingName;
                 var searchTerm = req.body.value || '';
                 privateMethods.optionsHandler.call(_this, settingName, searchTerm, state, res);
-            } else if (eventType == "CALL") {
+            } else if (eventType == "APP_CALL") {
                 req.assert('method', 'Method is required.').notEmpty();
                 var method = req.body.method;
-                var methodType = req.body.methodType || 'GET';
-                var elementType = req.body.elementType || 'checkboxElement';
+                var expectedData = req.body.expectedDataForElementType || 'text';
+
                 var args = req.body.args || {};
                 privateMethods.callHandler.call(_this, method, args, state.__auth, res);
             } else {
