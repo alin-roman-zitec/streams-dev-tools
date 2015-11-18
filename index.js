@@ -294,7 +294,6 @@ privateMethods = {
                 req.assert('method', 'Method is required.').notEmpty();
                 var method = req.body.method;
                 var expectedData = req.body.expectedDataForElementType || 'text';
-
                 var args = req.body.args || {};
                 privateMethods.callHandler.call(_this, method, args, state.__auth, res);
             } else {
