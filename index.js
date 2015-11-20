@@ -417,14 +417,17 @@ privateMethods = {
     callHandler: function(methodName, args, auth, response) {
         var promise = new Promise(), _this = this;
         promise.then(function(result) {
-            log('log', "Call method sucessful, the response containing " + result + " is being sent", true);
+            log('log', "Call method sucessful", true);
+            log('log', result, _this.debugMode);
 
             response.status(200).json({
-                v: 1,
-                p: result
+                version: 1,
+                data: result
             });
         }, function(reason, statusCode) {
             log('log', "Call method unsuccessful, the response containing the error message is being sent", true);
+            log('error', reason, _this.debugMode);
+
             response.status(statusCode || 400).json(reason);
         });
 
