@@ -418,11 +418,11 @@ privateMethods = {
         var promise = new Promise(), _this = this;
         promise.then(function(result) {
             log('log', "Call method sucessful", true);
-            log('log', result, _this.debugMode);
+            log('log', { version: 1, data: [result] }, _this.debugMode);
 
             response.status(200).json({
                 version: 1,
-                data: result
+                data: [result]
             });
         }, function(reason, statusCode) {
             log('log', "Call method unsuccessful, the response containing the error message is being sent", true);
