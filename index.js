@@ -250,6 +250,17 @@ VectorWatchStreamNode.prototype.changeAuthTokensForState = function(state, authT
     });
 };
 
+var handleError = function(err) {
+    if (err instanceof err) {
+        err = err.message;
+    }
+
+    this.json({
+        error: err
+    });
+
+    return this;
+};
 
 privateMethods = {
     setupRouter: function () {
@@ -260,6 +271,9 @@ privateMethods = {
         this.app.use(expressValidator());
         this.app.use(function (req, res, next) {
             log('log', req.method + '' + req.url, _this.debugMode);
+
+            res.handleError = handleError;
+
             next();
         });
 
@@ -320,7 +334,7 @@ privateMethods = {
             });
         }, function (reason, statusCode) {
             log('log', "Registration unsuccessfull, the response containing the error message is being sent", true);
-            response.status(statusCode || 400).json(reason);
+            response.status(statusCode || 400).handleError(reason);
         });
 
         privateMethods.storeSettingsItem.call(
@@ -375,7 +389,7 @@ privateMethods = {
             });
         }, function(reason, statusCode) {
             log('log', "Request auth method unsuccessfull, the response containing the error message is being sent.", true);
-            response.status(statusCode || 400).json(reason);
+            response.status(statusCode || 400).handleError(reason);
         });
 
         this.oauthClient.getAuthorizationUrl(function(err, url) {
@@ -400,7 +414,7 @@ privateMethods = {
             });
         }, function(reason, statusCode) {
             log('log', "Request config unsuccessful, the response containing the error message is being sent.", true);
-            response.status(statusCode || 400).json(reason);
+            response.status(statusCode || 400).handleError(reason);
         });
 
         privateMethods.getAccessToken.call(this, auth, function(err, tokens) {
@@ -428,7 +442,7 @@ privateMethods = {
             log('log', "Call method unsuccessful, the response containing the error message is being sent", true);
             log('error', reason, _this.debugMode);
 
-            response.status(statusCode || 400).json(reason);
+            response.status(statusCode || 400).handleError(reason);
         });
 
         privateMethods.getAccessToken.call(this, auth, function(err, tokens) {
@@ -453,7 +467,7 @@ privateMethods = {
             });
         }, function (reason, statusCode) {
             log('log', "Request options unsuccessful, the response containing the error message is being sent.", true);
-            response.status(statusCode || 400).json(reason);
+            response.status(statusCode || 400).handleError(reason);
         });
 
         privateMethods.getAccessToken.call(this, state.__auth, function(err, tokens) {
