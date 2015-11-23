@@ -251,7 +251,7 @@ VectorWatchStreamNode.prototype.changeAuthTokensForState = function(state, authT
 };
 
 var handleError = function(err) {
-    if (err instanceof err) {
+    if (err instanceof Error) {
         err = err.message;
     }
 
