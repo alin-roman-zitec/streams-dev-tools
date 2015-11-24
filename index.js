@@ -431,14 +431,14 @@ privateMethods = {
     callHandler: function(methodName, args, auth, response) {
         var promise = new Promise(), _this = this;
         promise.then(function(result) {
-            log('log', "Call method sucessful", true);
-            log('log', { version: 1, data: [result] }, _this.debugMode);
-
             if (result == null) {
                 result = [];
             } else {
                 result = [result];
             }
+
+            log('log', "Call method sucessful", true);
+            log('log', { version: 1, data: result }, _this.debugMode);
 
             response.status(200).json({
                 version: 1,
