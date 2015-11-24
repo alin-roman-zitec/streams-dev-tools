@@ -434,9 +434,15 @@ privateMethods = {
             log('log', "Call method sucessful", true);
             log('log', { version: 1, data: [result] }, _this.debugMode);
 
+            if (result == null) {
+                result = [];
+            } else {
+                result = [result];
+            }
+
             response.status(200).json({
                 version: 1,
-                data: [result]
+                data: result
             });
         }, function(reason, statusCode) {
             log('log', "Call method unsuccessful, the response containing the error message is being sent", true);
