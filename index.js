@@ -334,6 +334,7 @@ privateMethods = {
             });
         }, function (reason) {
             log('log', "Registration unsuccessfull, the response containing the error message is being sent", true);
+            console.log(statusCode || 400, util.inspect(reason, { colors: true, depth: null }));
             response.status(statusCode || 400).handleError(reason);
         });
 
@@ -358,7 +359,7 @@ privateMethods = {
     },
 
     unregisterHandler: function unregisterHandler(state, response) {
-        var _this = this, statusCode = null;
+        var _this = this;
         privateMethods.deleteSettings.call(
             this, state,
             function() {
@@ -380,7 +381,7 @@ privateMethods = {
             return response.sendStatus(400);
         }
 
-        var promise = new Promise(), _this = this, statusCode = null;
+        var promise = new Promise(), _this = this;
         promise.then(function(authMethod) {
             log('log', "Request auth method successfull, the response containing " + authMethod + " is being sent", true);
 
@@ -390,7 +391,8 @@ privateMethods = {
             });
         }, function(reason) {
             log('log', "Request auth method unsuccessfull, the response containing the error message is being sent.", true);
-            response.status(statusCode || 400).handleError(reason);
+            console.log(400, util.inspect(reason, { colors: true, depth: null }));
+            response.status(400).handleError(reason);
         });
 
         this.oauthClient.getAuthorizationUrl(function(err, url) {
@@ -415,6 +417,7 @@ privateMethods = {
             });
         }, function(reason) {
             log('log', "Request config unsuccessful, the response containing the error message is being sent.", true);
+            console.log(statusCode || 400, util.inspect(reason, { colors: true, depth: null }));
             response.status(statusCode || 400).handleError(reason);
         });
 
@@ -448,7 +451,7 @@ privateMethods = {
             });
         }, function(reason) {
             log('log', "Call method unsuccessful, the response containing the error message is being sent", true);
-            log('error', reason, _this.debugMode);
+            console.log(statusCode || 400, util.inspect(reason, { colors: true, depth: null }));
 
             response.status(statusCode || 400).handleError(reason);
         });
@@ -476,6 +479,7 @@ privateMethods = {
             });
         }, function (reason) {
             log('log', "Request options unsuccessful, the response containing the error message is being sent.", true);
+            console.log(statusCode || 400, util.inspect(reason, { colors: true, depth: null }));
             response.status(statusCode || 400).handleError(reason);
         });
 
