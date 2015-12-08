@@ -317,7 +317,7 @@ privateMethods = {
     },
 
     registerHandler: function registerHandler(state, channelLabel, response) {
-        var promise = new Promise(), _this = this;
+        var promise = new Promise(), _this = this, statusCode = null;
         promise.then(function (streamValue) {
             log('log', "Registration successfull, the response containing " + streamValue + " is being sent", true);
 
@@ -332,7 +332,7 @@ privateMethods = {
                     }
                 ]
             });
-        }, function (reason, statusCode) {
+        }, function (reason) {
             log('log', "Registration unsuccessfull, the response containing the error message is being sent", true);
             response.status(statusCode || 400).handleError(reason);
         });
@@ -345,7 +345,8 @@ privateMethods = {
 
                     _this.registerSettings(function (result) {
                         promise.resolve(result);
-                    }, function (err) {
+                    }, function (err, status) {
+                        statusCode = status;
                         promise.reject(err);
                     }, state, tokens);
                 });
