@@ -358,7 +358,7 @@ privateMethods = {
     },
 
     unregisterHandler: function unregisterHandler(state, response) {
-        var _this = this;
+        var _this = this, statusCode = null;
         privateMethods.deleteSettings.call(
             this, state,
             function() {
@@ -380,7 +380,7 @@ privateMethods = {
             return response.sendStatus(400);
         }
 
-        var promise = new Promise(), _this = this;
+        var promise = new Promise(), _this = this, statusCode = null;
         promise.then(function(authMethod) {
             log('log', "Request auth method successfull, the response containing " + authMethod + " is being sent", true);
 
@@ -388,7 +388,7 @@ privateMethods = {
                 v: 1,
                 p: authMethod
             });
-        }, function(reason, statusCode) {
+        }, function(reason) {
             log('log', "Request auth method unsuccessfull, the response containing the error message is being sent.", true);
             response.status(statusCode || 400).handleError(reason);
         });
@@ -405,7 +405,7 @@ privateMethods = {
     },
 
     configHandler: function configHandler(auth, response) {
-        var promise = new Promise(), _this = this;
+        var promise = new Promise(), _this = this, statusCode = null;
         promise.then(function(config) {
             log('log', "Request stream config successful, the response containing " + config + " is being sent", true);
 
@@ -413,7 +413,7 @@ privateMethods = {
                 v: 1,
                 p: config
             });
-        }, function(reason, statusCode) {
+        }, function(reason) {
             log('log', "Request config unsuccessful, the response containing the error message is being sent.", true);
             response.status(statusCode || 400).handleError(reason);
         });
@@ -423,14 +423,15 @@ privateMethods = {
 
             _this.requestConfig(function(result) {
                 promise.resolve(result);
-            }, function(err) {
+            }, function(err, status) {
+                statusCode = status;
                 promise.reject(err);
             }, tokens);
         });
     },
 
     callHandler: function(methodName, args, auth, response) {
-        var promise = new Promise(), _this = this;
+        var promise = new Promise(), _this = this, statusCode = null;
         promise.then(function(result) {
             if (result == null) {
                 result = [];
@@ -445,7 +446,7 @@ privateMethods = {
                 version: 1,
                 data: result
             });
-        }, function(reason, statusCode) {
+        }, function(reason) {
             log('log', "Call method unsuccessful, the response containing the error message is being sent", true);
             log('error', reason, _this.debugMode);
 
@@ -457,14 +458,15 @@ privateMethods = {
 
             _this.callMethod(function(result) {
                 promise.resolve(result);
-            }, function(err) {
+            }, function(err, status) {
+                statusCode = status;
                 promise.reject(err);
             }, methodName, args, tokens);
         });
     },
 
     optionsHandler: function optionsHandler(settingName, searchTerm, state, response) {
-        var promise = new Promise(), _this = this;
+        var promise = new Promise(), _this = this, statusCode = null;
         promise.then(function(options) {
             log('log', "Request options successful, the response containing " + options + " is being sent", true);
 
@@ -472,7 +474,7 @@ privateMethods = {
                 v: 1,
                 p: options
             });
-        }, function (reason, statusCode) {
+        }, function (reason) {
             log('log', "Request options unsuccessful, the response containing the error message is being sent.", true);
             response.status(statusCode || 400).handleError(reason);
         });
@@ -480,7 +482,8 @@ privateMethods = {
         privateMethods.getAccessToken.call(this, state.__auth, function(err, tokens) {
             _this.requestOptions(function (result) {
                 promise.resolve(result);
-            }, function (err) {
+            }, function (err, status) {
+                statusCode = status;
                 promise.reject(err);
             }, settingName, searchTerm, state, tokens);
         });
