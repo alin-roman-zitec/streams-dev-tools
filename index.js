@@ -341,7 +341,7 @@ privateMethods = {
             this, state,
             function() {
                 privateMethods.getAccessToken.call(_this, state.__auth, function(err, tokens) {
-                    if (err) return promise.reject(err);
+                    //if (err) return promise.reject(err);
 
                     _this.registerSettings(function (result) {
                         promise.resolve(result);
