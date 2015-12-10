@@ -422,7 +422,7 @@ privateMethods = {
         });
 
         privateMethods.getAccessToken.call(this, auth, function(err, tokens) {
-            if (err) return promise.reject(err);
+            //if (err) return promise.reject(err);
 
             _this.requestConfig(function(result) {
                 promise.resolve(result);
@@ -457,7 +457,7 @@ privateMethods = {
         });
 
         privateMethods.getAccessToken.call(this, auth, function(err, tokens) {
-            if (err) return promise.reject(err);
+            //if (err) return promise.reject(err);
 
             _this.callMethod(function(result) {
                 promise.resolve(result);
