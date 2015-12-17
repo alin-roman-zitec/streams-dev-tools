@@ -214,7 +214,7 @@ VectorWatchStreamNode.prototype.retrieveSettings = VectorWatchStreamNode.prototy
  * @param callback {Function}
  */
 VectorWatchStreamNode.prototype.getAuthTokensForState = function(state, callback) {
-    privateMethods.getAccessToken.call(this, state.__auth, callback);
+    privateMethods.getAccessToken.call(this, (state || {}).__auth, callback);
 };
 
 /** Delete al settings from the DB.
