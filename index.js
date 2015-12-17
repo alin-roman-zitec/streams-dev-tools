@@ -202,6 +202,8 @@ VectorWatchStreamNode.prototype.retrieveSettings = VectorWatchStreamNode.prototy
 
         for (var channelLabel in states) {
             var state = states[channelLabel];
+
+            if (!states[channelLabel]) continue;
             state.channelLabel = channelLabel;
         }
 
