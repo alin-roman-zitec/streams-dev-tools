@@ -311,7 +311,8 @@ privateMethods = {
                 var method = req.body.method;
                 var expectedData = req.body.expectedDataForElementType || 'text';
                 var args = req.body.args || {};
-                privateMethods.callHandler.call(_this, method, args, state.__auth, res);
+                var location = req.body.location;
+                privateMethods.callHandler.call(_this, method, args, state.__auth, state, location, res);
             } else {
                 return next("No known event");
             }
@@ -435,12 +436,12 @@ privateMethods = {
         });
     },
 
-    callHandler: function(methodName, args, auth, response) {
+    callHandler: function(methodName, args, auth, state, location, response) {
         var promise = new Promise(), _this = this, statusCode = null;
         promise.then(function(result) {
             if (result == null) {
                 result = [];
-            } else {
+            } else if (!Array.isArray(result)) {
                 result = [result];
             }
 
@@ -466,7 +467,7 @@ privateMethods = {
             }, function(err, status) {
                 statusCode = status;
                 promise.reject(err);
-            }, methodName, args, tokens);
+            }, methodName, args, tokens, state, location);
         });
     },
 
