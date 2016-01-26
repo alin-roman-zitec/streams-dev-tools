@@ -299,7 +299,8 @@ privateMethods = {
             } else if (eventType == "REQ_AUTH") {
                 privateMethods.authHandler.call(_this, res);
             } else if (eventType == "REQ_CONFIG") {
-                privateMethods.configHandler.call(_this, state.__auth, res);
+                var location = req.body.location;
+                privateMethods.configHandler.call(_this, state.__auth, location, res);
             } else if (eventType == "REQ_OPTS") {
                 req.assert('settingName', 'Setting name is required').notEmpty();
 
@@ -409,7 +410,7 @@ privateMethods = {
         });
     },
 
-    configHandler: function configHandler(auth, response) {
+    configHandler: function configHandler(auth, location, response) {
         var promise = new Promise(), _this = this, statusCode = null;
         promise.then(function(config) {
             log('log', "Request stream config successful, the response containing " + config + " is being sent", true);
@@ -432,7 +433,7 @@ privateMethods = {
             }, function(err, status) {
                 statusCode = status;
                 promise.reject(err);
-            }, tokens);
+            }, tokens, location);
         });
     },
 
